@@ -1,30 +1,27 @@
-import { useState } from 'react'
-import Post from "./Post"
-import classes from './PostList.module.css'
-import NewPost from "./NewPost"
+import Post from "./Post";
+import classes from "./PostList.module.css";
+import { useLoaderData } from "react-router-dom";
 
 function PostList(props) {
-
-    const [enteredBody, setEnteredBody] = useState('')
-    const [enteredAuthor, setEnteredAuthor] = useState('')
-
-    function changeBodyHandler(event) {
-        setEnteredBody(event.target.value)
-    }
-
-    function changeAuthorHandler(event) {
-        setEnteredAuthor(event.target.value)
-    }
+    const posts = useLoaderData();
 
     return (
         <>
-            <NewPost onBodyChange={changeBodyHandler} onAuthorChange={changeAuthorHandler} />
-            <ul className={classes.posts}>
-                <Post author={enteredAuthor} body={enteredBody} />
-                <Post author="Bipin" body="React.js is awesome" />
-            </ul>
+            {posts?.length && (
+                <ul className={classes.posts}>
+                    {posts.map((post) => (
+                        <Post key={post.id} id={post.id} author={post.author} body={post.body} />
+                    ))}
+                </ul>
+            )}
+            {!posts?.length && (
+                <div style={{ textAlign: "center", color: "white" }}>
+                    <h3>There is no post!</h3>
+                    <p>Add some post!</p>
+                </div>
+            )}
         </>
-    )
+    );
 }
 
-export default PostList
+export default PostList;
